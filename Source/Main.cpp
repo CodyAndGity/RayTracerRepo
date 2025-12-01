@@ -3,6 +3,8 @@
 #include <glm/glm.hpp>
 #include "Renderer.h"
 #include "Framebuffer.h"
+#include "Ray.h"
+
 int main() {
 	constexpr int SCREEN_WIDTH = 800;
 	constexpr int SCREEN_HEIGHT = 600;
@@ -11,9 +13,9 @@ int main() {
 	Renderer renderer;
 	renderer.Initialize();
 	renderer.CreateWindow("Ray Tracer", SCREEN_WIDTH, SCREEN_HEIGHT);
-
+	
 	Framebuffer framebuffer(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
-
+	
 	SDL_Event event;
 	bool quit = false;
 	while (!quit) {
