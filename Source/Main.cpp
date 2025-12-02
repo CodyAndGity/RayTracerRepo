@@ -4,7 +4,7 @@
 #include "Renderer.h"
 #include "Framebuffer.h"
 #include "Ray.h"
-
+#include "Camera.h"
 int main() {
 	constexpr int SCREEN_WIDTH = 800;
 	constexpr int SCREEN_HEIGHT = 600;
@@ -15,7 +15,9 @@ int main() {
 	renderer.CreateWindow("Ray Tracer", SCREEN_WIDTH, SCREEN_HEIGHT);
 	
 	Framebuffer framebuffer(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
-	
+	float aspectRatio = framebuffer.width / (float)framebuffer.height;
+		Camera camera(70.0f, aspectRatio);
+	camera.SetView({ 0, 0, 5 }, { 0, 0, 0 });
 	SDL_Event event;
 	bool quit = false;
 	while (!quit) {
