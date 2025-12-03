@@ -12,10 +12,10 @@ inline SDL_Color ColorConvert(const color4_t& color4)
 {
 	SDL_Color color;
 
-	color.r = color4.r*255;
-	color.g = color4.g*255;
-	color.b = color4.b*255;
-	color.a = color4.a*255;
+	color.r = (uint8_t)(std::clamp(color4.r,0.0f,1.0f)*255);
+	color.g = (uint8_t)(std::clamp(color4.g,0.0f,1.0f)*255);
+	color.b = (uint8_t)(std::clamp(color4.b,0.0f,1.0f)*255);
+	color.a = (uint8_t)(std::clamp(color4.a,0.0f,1.0f)*255);
 
 	return color;
 }
@@ -25,9 +25,9 @@ inline SDL_Color ColorConvert(const color3_t& color3)
 {
 	SDL_Color color;
 
-	color.r = color3.r *255; // convert color4 to SDL_Color color
-	color.g = color3.g *255; // convert color4 to SDL_Color color
-	color.b = color3.b *255; // convert color4 to SDL_Color color
+	color.r = (uint8_t)(std::clamp(color3.r, 0.0f, 1.0f) * 255);
+	color.g = (uint8_t)(std::clamp(color3.g, 0.0f, 1.0f) * 255);
+	color.b = (uint8_t)(std::clamp(color3.b, 0.0f, 1.0f) * 255);
 	color.a = 255;
 
 	return color;
