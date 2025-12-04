@@ -8,6 +8,7 @@ class Scene
 {
 public:
 	Scene() = default;
+	void Render(class Framebuffer& framebuffer, const class Camera& camera, int numSamples =10);
 
 	void Render(class Framebuffer& framebuffer, const class Camera& camera);
 	void SetSky(const color3_t& skyBottom, const color3_t& skyTop) {
@@ -18,7 +19,7 @@ public:
 private:
 	// trace the ray into the scene
 	color3_t Trace(const struct Ray& ray);
-	color3_t Trace(const struct Ray& ray, float minDistance, float maxDistance, RayHit& raycastHit);
+	color3_t Trace(const struct Ray& ray, float minDistance, float maxDistance);
 
 private:
 	color3_t skyBottom{ 1 };

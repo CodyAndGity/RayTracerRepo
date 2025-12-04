@@ -68,5 +68,8 @@
     <ClInclude Include="Source\Sphere.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Transform.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -150,6 +150,7 @@
     <ClInclude Include="Source\Scene.h" />
     <ClInclude Include="Source\Sphere.h" />
     <ClInclude Include="Source\Time.h" />
+    <ClInclude Include="Source\Transform.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

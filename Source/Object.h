@@ -1,6 +1,7 @@
 #pragma once
 #include "Color.h"
 #include "Ray.h"
+#include "Transform.h"
 class Object{
 public:
 		Object() = default;
@@ -10,4 +11,5 @@ public:
 
 protected:
 		color3_t color{0,0,0};
+		Transform transform;
 };

@@ -3,6 +3,35 @@
 #include "Camera.h"
 #include "Color.h"
 #include <iostream>
+#include "Random.h"
+void Scene::Render(Framebuffer& framebuffer, const Camera& camera, int numSamples) {
+	// trace ray for every framebuffer pixel
+	for (int y = 0; y < framebuffer.height; y++) {
+		for (int x = 0; x < framebuffer.width; x++) {
+			// color will be accumulated with ray trace samples
+			color3_t color{ 0 };
+			// multi-sample for each pixel
+			for (int i = 0; i < numSamples;i++) {
+				// set pixel (x,y) coordinates)
+				glm::vec2 pixel{ x, y };
+				// add random value (0-1) to pixel value, each sample should be a little different
+				pixel += glm::vec2{ random::getReal(), random::getReal() };//< add vec2{ random real 0 - 1, random real 0 - 1 } > ;
+				// normalize (0 <-> 1) the pixel value (pixel / vec2{ framebuffer.width, framebuffer.height }
+				glm::vec2 point = pixel / glm::vec2{ framebuffer.width, framebuffer.height };
+				// flip the y value (bottom = 0, top = 1)
+				point.y = 1 - point.y;
+
+				// get ray from camera
+				Ray ray = camera.GetRay(point);
+				// trace ray
+				color += Trace(ray, 0, 100);
+			}
+			// get average color = (color / number samples)
+			color = (color / glm::vec3(numSamples));
+			framebuffer.DrawPoint(x, y, ColorConvert(color));
+		}
+	}
+}
 
 void Scene::Render(Framebuffer& framebuffer, const Camera& camera) {
 	// trace ray for every framebuffer pixel
@@ -19,9 +48,9 @@ void Scene::Render(Framebuffer& framebuffer, const Camera& camera) {
 			// get ray from camera
 			Ray ray = camera.GetRay(point);// call GetRay() from camera
 				// trace ray
-			RayHit raycastHit;
+			
 			// 0 = min ray distance, 100 = max ray distance
-			color3_t color = Trace(ray, 0, 100, raycastHit);
+			color3_t color = Trace(ray, 0, 100);
 			//color3_t color=Trace(ray); // class Trace with ray;
 			auto c = ColorConvert(color);
 			// draw pixel (x,y) to frame buffer using color (make sure to convert color)
@@ -47,8 +76,9 @@ color3_t Scene::Trace(const Ray& ray) {
 	return color;
 }
 
-color3_t Scene::Trace(const Ray& ray, float minDistance, float maxDistance,
-	RayHit& raycastHit) {
+color3_t Scene::Trace(const Ray& ray, float minDistance, float maxDistance) {
+	RayHit raycastHit;
+
 	bool rayHit = false;
 	float closestDistance = maxDistance;
 	// check if scene objects are hit by the ray
