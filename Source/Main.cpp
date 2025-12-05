@@ -25,14 +25,19 @@ int main() {
 	
 	Scene scene; // after camera creation/initialization
 	scene.SetSky({ 0,1,0 }, { 0,0,1 });
-
-	std::unique_ptr<Object> sphere = std::make_unique<Sphere>(glm::vec3{ 0, 0, 0 }, 2.0f, color3_t{ 1, 0, 0 });
-	scene.AddObject(std::move(sphere));
-	for (int i = 0; i < 5; i++) {
+	auto red = std::make_shared<Lambertian>(color3_t{ 1.0f, 0.0f, 0.0f });
+	auto green = std::make_shared<Lambertian>(color3_t{ 0.0f, 1.0f, 0.0f });//<green lambertian>
+		auto blue = std::make_shared<Lambertian>(color3_t{ 0.0f, 0.0f, 1.0f });// <blue lambertian>
+		auto light = std::make_shared<Emissive>(color3_t{ 1.0f, 1.0f, 1.0f }, 3.0f);
+	auto metal = std::make_shared<Metal>(color3_t{ 1.0f, 1.0f, 1.0f }, 0.0f);
+	std::shared_ptr<Material> materials[5] = {red, green, blue, light, metal};
+	
+	
+	for (int i = 0; i < 15; i++) {
 		glm::vec3 position = random::getReal(glm::vec3{ -3.0f }, glm::vec3{ 3.0f });
-		std::unique_ptr<Object> sphere = std::make_unique<Sphere>(position, 1.0f, color3_t{ 0, 1, 0 });
+		Transform transform = Transform{ position };
+		std::unique_ptr<Object> sphere = std::make_unique<Sphere>(transform, random::getReal(0.2f, 1.0f), materials[random::getInt(5)]);
 		scene.AddObject(std::move(sphere));
-
 	}
 
 

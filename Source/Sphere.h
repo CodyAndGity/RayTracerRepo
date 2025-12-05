@@ -1,10 +1,12 @@
 #pragma once
 #include "Object.h"
 #include "Material.h"
+#include <memory>
+#include <memory.h>
 class Sphere : public Object{
 public:
 	Sphere() = default;
-	Sphere(Transform& transform, std::shared_ptr<Material> material,const glm::vec3& position, float radius) :
+	Sphere(Transform& transform,  float radius, std::shared_ptr<Material> material) :
 		Object(transform, material),
 		
 		radius{ radius } {  };

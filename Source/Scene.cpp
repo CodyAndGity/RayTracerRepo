@@ -125,9 +125,7 @@ color3_t Scene::Trace(const Ray& ray, float minDistance, float maxDistance, int 
 	for (auto& object : objects) {
 		//!! get nearest hit object (already completed in previous assignment) !!
 		//when checking objects don't include objects farther than closest hit
-	   /*if (raycastHit.distance > closestDistance) {
-		   continue;
-	   }*/
+	   
 	   //(starts at max distance)
 		if (object->Hit(ray, minDistance, closestDistance, raycastHit)) {
 			rayHit = true;

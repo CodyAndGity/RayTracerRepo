@@ -1,7 +1,7 @@
 #pragma once
 #include <glm/glm.hpp>
 #include "Color.h"
-#include "Material.h"
+//#include "Material.h"
 struct Ray {
 public:
 	Ray() {}

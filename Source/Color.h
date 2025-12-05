@@ -38,10 +38,10 @@ inline color4_t ColorConvert(const SDL_Color& color)
 {
 	color4_t color4;
 
-	color4.r = color.r / 255; // convert SDL_Color color to color4
-	color4.g = color.g / 255; // convert SDL_Color color to color4
-	color4.b = color.b / 255; // convert SDL_Color color to color4
-	color4.a = color.a / 255; // convert SDL_Color color to color4
+	color4.r = color.r / 255.0f; // convert SDL_Color color to color4
+	color4.g = color.g / 255.0f; // convert SDL_Color color to color4
+	color4.b = color.b / 255.0f; // convert SDL_Color color to color4
+	color4.a = color.a / 255.0f; // convert SDL_Color color to color4
 
 	return color4;
 }
