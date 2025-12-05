@@ -1,6 +1,7 @@
 #include "Sphere.h"
 
 bool Sphere::Hit(const Ray& ray, float minDistance, float maxDistance, RayHit& raycastHit) {
+    glm::vec3 position = this->transform.position;
     // compute direction vector (ray origin - sphere center)
     glm::vec3 oc = ray.origin - position;
 
@@ -29,7 +30,7 @@ bool Sphere::Hit(const Ray& ray, float minDistance, float maxDistance, RayHit& r
             raycastHit.point = ray.at(t); // use ray at(t)
             raycastHit.normal = (raycastHit.point - position) / radius;
 
-            raycastHit.color = color;
+            //raycastHit.color = color;
 
             return true;
         }
@@ -41,7 +42,7 @@ bool Sphere::Hit(const Ray& ray, float minDistance, float maxDistance, RayHit& r
             raycastHit.point = ray.at(t); // use ray at(t)
             raycastHit.normal = (raycastHit.point - position) / radius;
 
-            raycastHit.color = color;
+            //raycastHit.color = color;
 
             return true;
         }

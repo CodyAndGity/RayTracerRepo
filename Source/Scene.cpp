@@ -11,7 +11,7 @@ void Scene::Render(Framebuffer& framebuffer, const Camera& camera, int numSample
 			// color will be accumulated with ray trace samples
 			color3_t color{ 0 };
 			// multi-sample for each pixel
-			for (int i = 0; i < numSamples;i++) {
+			for (int i = 0; i < numSamples; i++) {
 				// set pixel (x,y) coordinates)
 				glm::vec2 pixel{ x, y };
 				// add random value (0-1) to pixel value, each sample should be a little different
@@ -36,7 +36,7 @@ void Scene::Render(Framebuffer& framebuffer, const Camera& camera, int numSample
 void Scene::Render(Framebuffer& framebuffer, const Camera& camera) {
 	// trace ray for every framebuffer pixel
 	for (int y = 0; y < framebuffer.height; y++) {
-		for (int x = 0; x < framebuffer.width; x++)	{
+		for (int x = 0; x < framebuffer.width; x++) {
 			// set pixel (x,y) coordinates)
 			glm::vec2 pixel(x, y);
 			// normalize (0 <-> 1) the pixel value (pixel / { framebuffer.width, framebuffer.height }
@@ -47,9 +47,9 @@ void Scene::Render(Framebuffer& framebuffer, const Camera& camera) {
 
 			// get ray from camera
 			Ray ray = camera.GetRay(point);// call GetRay() from camera
-				// trace ray
-			
-			// 0 = min ray distance, 100 = max ray distance
+			// trace ray
+
+		// 0 = min ray distance, 100 = max ray distance
 			color3_t color = Trace(ray, 0, 100);
 			//color3_t color=Trace(ray); // class Trace with ray;
 			auto c = ColorConvert(color);
@@ -64,11 +64,11 @@ color3_t Scene::Trace(const Ray& ray) {
 	// draw sky colors based on the ray y position
 	glm::vec3 direction = glm::normalize(ray.getDirection());
 	// shift direction y from -1 <-> 1 to 0 <-> 1
-	direction.y = (direction.y + 1)*0.5f;
+	direction.y = (direction.y + 1) * 0.5f;
 
 	float t = direction.y; // (direction.y + ??) * ??
 	t = glm::clamp(t, 0.0f, 1.0f);
-	
+
 	// interpolate between sky bottom (0) to sky top (1)
 	// mix is the same as lerp, interpolates between values using t (0-1)
 	color3_t color = glm::mix(skyBottom, skyTop, t);
@@ -76,43 +76,93 @@ color3_t Scene::Trace(const Ray& ray) {
 	return color;
 }
 
-color3_t Scene::Trace(const Ray& ray, float minDistance, float maxDistance) {
-	RayHit raycastHit;
+//color3_t Scene::Trace(const Ray& ray, float minDistance, float maxDistance) {
+//	RayHit raycastHit;
+//
+//	bool rayHit = false;
+//	float closestDistance = maxDistance;
+//	// check if scene objects are hit by the ray
+//	for (auto& object : objects) {
+//		// when checking objects don't include objects farther than closest hit
+//		/*if (raycastHit.distance > closestDistance) {
+//			continue;
+//		}*/
+//		//(starts at max distance)
+//			if (object->Hit(ray, minDistance, closestDistance, raycastHit)) {
+//				rayHit = true;
+//				// set closest distance to the raycast hit distance (only hit
+//				//objects closer than closest distance)
+//				closestDistance = raycastHit.distance; // raycast hit distance;
+//			}
+//	}
+//	// check if ray hit object
+//	if (rayHit) {
+//		// get material color of hit object
+//		//color3_t color = glm::vec3{ raycastHit.distance * 0.1f };
+//		//color3_t color = raycastHit.normal;
+//		color3_t color = raycastHit.color;
+//		return color;
+//	}
+//	// draw sky colors based on the ray y position
+//	glm::vec3 direction = glm::normalize(ray.direction);
+//	// shift direction y from -1 <-> 1 to 0 <-> 1
+//	float t = (direction.y + 1) * 0.5f;
+//	// interpolate between sky bottom (0) to sky top (1)
+//	color3_t color = glm::mix(skyBottom, skyTop, t);
+//	return color;
+//}
+
+color3_t Scene::Trace(const Ray& ray, float minDistance, float maxDistance, int maxDepth) {
+
+	// reached max depth (bounce) return black color
+	if (maxDepth == 0) return color3_t{ 0,0,0 };
 
 	bool rayHit = false;
 	float closestDistance = maxDistance;
+	RayHit raycastHit;
+
 	// check if scene objects are hit by the ray
 	for (auto& object : objects) {
-		// when checking objects don't include objects farther than closest hit
-		/*if (raycastHit.distance > closestDistance) {
-			continue;
-		}*/
-		//(starts at max distance)
-			if (object->Hit(ray, minDistance, closestDistance, raycastHit)) {
-				rayHit = true;
-				// set closest distance to the raycast hit distance (only hit
-				//objects closer than closest distance)
-				closestDistance = raycastHit.distance; // raycast hit distance;
-			}
+		//!! get nearest hit object (already completed in previous assignment) !!
+		//when checking objects don't include objects farther than closest hit
+	   /*if (raycastHit.distance > closestDistance) {
+		   continue;
+	   }*/
+	   //(starts at max distance)
+		if (object->Hit(ray, minDistance, closestDistance, raycastHit)) {
+			rayHit = true;
+			// set closest distance to the raycast hit distance (only hit
+			//objects closer than closest distance)
+			closestDistance = raycastHit.distance; // raycast hit distance;
+		}
 	}
-	// check if ray hit object
-	if (rayHit) {
-		// get material color of hit object
-		//color3_t color = glm::vec3{ raycastHit.distance * 0.1f };
-		//color3_t color = raycastHit.normal;
-		color3_t color = raycastHit.color;
-		return color;
+
+
+// check if ray hit object
+if (rayHit) {
+	color3_t attenuation;
+	Ray scattered;
+	// get raycast hit material, get material color and scattered ray 
+	if (raycastHit.material->Scatter(ray, raycastHit, attenuation, scattered)) {
+		// trace scattered ray, final color will be the product of all the material colors
+		return attenuation * Trace(scattered, minDistance, maxDistance, maxDepth - 1);//<reduce max depth by 1>);
 	}
-	// draw sky colors based on the ray y position
+	else {
+		return raycastHit.material->GetEmissive();
+	}
+}
+
+// no ray hit, draw sky colors based on the ray y position
+// !! already completed in previous assignment !!
+// draw sky colors based on the ray y position
 	glm::vec3 direction = glm::normalize(ray.direction);
 	// shift direction y from -1 <-> 1 to 0 <-> 1
 	float t = (direction.y + 1) * 0.5f;
 	// interpolate between sky bottom (0) to sky top (1)
 	color3_t color = glm::mix(skyBottom, skyTop, t);
 	return color;
+
 }
-
-
 
 void Scene::AddObject(std::unique_ptr<Object> object) {
 	objects.push_back(std::move(object));
