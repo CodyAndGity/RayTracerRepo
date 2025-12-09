@@ -7,7 +7,7 @@
 class Object {
 public:
 	Object() = default;
-	Object(Transform& transform, std::shared_ptr<Material> material)
+	Object(const Transform& transform, std::shared_ptr<Material> material)
 		:transform{ transform },
 		material{ material }
 	{};

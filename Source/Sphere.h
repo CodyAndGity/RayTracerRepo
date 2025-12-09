@@ -6,7 +6,7 @@
 class Sphere : public Object{
 public:
 	Sphere() = default;
-	Sphere(Transform& transform,  float radius, std::shared_ptr<Material> material) :
+	Sphere(const Transform& transform,  float radius, std::shared_ptr<Material> material) :
 		Object(transform, material),
 		
 		radius{ radius } {  };
